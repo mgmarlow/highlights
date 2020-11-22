@@ -72,7 +72,7 @@ module Highlights
           options.filename = f
         end
 
-        opts.on("-oOUTPUT", "--output=OUTPUT", "Output file") do |o|
+        opts.on("-oOUTPUT", "--output=OUTPUT", "Output file (default: notes.md)") do |o|
           options.output = o
         end
 
