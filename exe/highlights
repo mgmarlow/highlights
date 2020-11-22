@@ -1,0 +1,7 @@
+#!/usr/bin/env ruby
+
+require "bundler/setup"
+require "highlights"
+
+Highlights::CLI.new(ARGV).run
+
