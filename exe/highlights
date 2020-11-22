@@ -3,5 +3,5 @@
 require "bundler/setup"
 require "highlights"
 
-Highlights::CLI.new(ARGV).run
+Highlights.run(ARGV)
 
