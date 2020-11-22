@@ -6,7 +6,13 @@ module Highlights
       @args = args
     end
 
-    def options
+    def run
+      options = get_options
+      document = Parser.new(options.filename).parse
+      Renderer.new(document, options.output).render
+    end
+
+    def get_options
       options = Options.new(nil, "notes.md")
 
       OptionParser.new do |opts|
