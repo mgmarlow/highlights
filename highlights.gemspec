@@ -6,7 +6,8 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Graham Marlow"]
   spec.email         = ["mgmarlow@hey.com"]
 
-  spec.summary       = "A readable format for Kindle notes."
+  spec.summary       = "Create readable Kindle notes."
+  spec.description   = "A CLI tool that converts a Kindle CSV file to markdown."
   spec.homepage      = "https://github.com/mgmarlow/highlights"
   spec.license       = "MIT"
   spec.required_ruby_version = Gem::Requirement.new(">= 2.3.0")
