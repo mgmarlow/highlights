@@ -1,24 +1,23 @@
 module Highlights
   class Renderer
+    include Formatter::HTML
+    include Formatter::Markdown
+
     def initialize(document, outfile)
       @document = document
       @outfile = outfile
     end
 
-    def render
-      File.open(@outfile, 'w') do |file|
-        file.puts("# #{@document.title}")
-        file.puts("## #{@document.author}")
-        file.write("\n")
-        file.puts("### Notes")
-        file.write("\n")
+    def self.render(*args)
+      new(*args).render
+    end
 
-        @document.notes.each do |note|
-          file.puts("> #{note.annotation}")
-          file.write("\n")
-          file.puts("#{note.type}: #{note.location}")
-          file.write("\n")
-        end
+    def render
+      case File.extname(@outfile)
+      when '.md', '.markdown'
+        render_markdown
+      when '.html'
+        render_html
       end
     end
   end

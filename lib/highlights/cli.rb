@@ -3,24 +3,27 @@ module Highlights
     Options = Struct.new(:filename, :output)
 
     def initialize(args)
+      args << '-h' if ARGV.empty?
       @args = args
     end
 
     def run
       options = get_options
       document = Parser.new(options.filename).parse
-      Renderer.new(document, options.output).render
+      Renderer.render(document, options.output)
     end
 
     def get_options
       options = Options.new(nil, "notes.md")
 
       OptionParser.new do |opts|
+        opts.banner = "Usage: highlights -f file.csv -o [output file]"
+
         opts.on("-fFILENAME", "--file=FILENAME", "Kindle notes CSV file") do |f|
           options.filename = f
         end
 
-        opts.on("-oOUTPUT", "--output=OUTPUT", "Output file (default: notes.md)") do |o|
+        opts.on("-oOUTPUT", "--output=OUTPUT", "Output file. Accepts HTML and markdown (default: notes.md)") do |o|
           options.output = o
         end
 

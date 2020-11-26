@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= @document.title %></title>
+  <style>
+    body {
+      width: calc(100% - 40px);
+      max-width: 675px;
+      margin: 0 auto;
+    }
+
+    body, * {
+      font-family: Georgia, serif;
+    }
+
+    p {
+      font-size: 18px;
+      line-height: 1.45;
+    }
+
+    ul {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    li {
+      margin-bottom: 2.5rem;
+    }
+
+    blockquote {
+      margin: 0;
+      border-left: 8px solid rgba(255, 222, 3, 0.5);
+      padding-left: 1rem;
+    }
+
+    figcaption {
+      margin-left: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <h1><%= @document.title %></h1>
+  <p><%= @document.author %></p>
+
+  <h2>Notes</h2>
+
+  <ul>
+    <% for @note in @document.notes %>
+      <li>
+        <div>
+          <blockquote><p><%= @note.annotation %></p></blockquote>
+          <figcaption><%= @note.type %>: <%= @note.location %></figcaption>
+        </div>
+      </li>
+    <% end %>
+  </ul>
+</body>
+</html>
