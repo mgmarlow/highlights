@@ -36,10 +36,6 @@ $ gem install highlights
 ## Usage
 
 ```
-$ highlights -f zamm_notes.csv
-```
-
-```
 $ highlights -h
 
 Usage: highlights -f file.csv -o [output file]
