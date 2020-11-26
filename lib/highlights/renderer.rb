@@ -8,11 +8,11 @@ module Highlights
       @outfile = outfile
     end
 
-    def self.render(*args)
-      new(*args).render
+    def self.call(*args)
+      new(*args).call
     end
 
-    def render
+    def call
       case File.extname(@outfile)
       when '.md', '.markdown'
         render_markdown

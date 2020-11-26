@@ -18,11 +18,11 @@ by Robert M. Pirsig
 
 ## Notes
 
-> You�re a passive observer and it is all moving by you boringly in a frame.
+> You're a passive observer and it is all moving by you boringly in a frame.
 
 Highlight (Yellow): Page 4
 
-> Instead you spend your time being aware of things and meditating on them. On sights and sounds, on the mood of the weather and things remembered, on the machine and the countryside you�re in, thinking about things at great leisure and length without being hurried and without feeling you�re losing time.
+> Instead you spend your time being aware of things and meditating on them. On sights and sounds, on the mood of the weather and things remembered, on the machine and the countryside you�re in, thinking about things at great leisure and length without being hurried and without feeling you're losing time.
 
 Highlight (Yellow): Page 6
 ```

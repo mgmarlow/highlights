@@ -9,8 +9,8 @@ module Highlights
 
     def run
       options = get_options
-      document = Parser.new(options.filename).parse
-      Renderer.render(document, options.output)
+      document = Parser.call(options.filename)
+      Renderer.call(document, options.output)
     end
 
     def get_options

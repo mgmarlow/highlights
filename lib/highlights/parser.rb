@@ -7,7 +7,11 @@ module Highlights
       @filename = filename
     end
 
-    def parse
+    def self.call(*args)
+      new(*args).call
+    end
+
+    def call
       table = CSV.read(@filename, liberal_parsing: true)
 
       notes = table[NOTES_STARTING_POSITION...].map do |note_row|
