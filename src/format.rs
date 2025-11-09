@@ -1,9 +1,21 @@
 use crate::parser::Clipping;
+use std::collections::HashMap;
 use std::fs::File;
 use std::io::Write;
 
 pub fn summary(clippings: &[Clipping]) {
-    println!("Found {} highlights", clippings.len());
+    let book_counts = clippings.iter().fold(HashMap::new(), |mut acc, clipping| {
+        *acc.entry(clipping.title.clone()).or_insert(0) += 1;
+        acc
+    });
+
+    println!("Highlights by book:");
+    for (title, count) in book_counts.iter() {
+        println!("{}: {}", title, count);
+    }
+
+    let total: usize = book_counts.values().sum();
+    println!("\nTotal: {}", total);
 }
 
 pub fn json(clippings: &[Clipping], outfile: Option<&str>) {
