@@ -2,6 +2,15 @@
 
 Convert Kindle "My Clippings.txt" files into structured JSON.
 
+Highlights for ebooks manually uploaded to a Kindle device are
+stored in the on-device "My Clippings.txt" rather than the usual
+highlight notebook. This CLI reads this text file and converts
+it to JSON so you can easily import it into other formats.
+
+Shoutout to [Standard Ebooks](https://standardebooks.org/) for
+being the reason I have so many highlights stored as Kindle
+clippings.
+
 ## Usage
 
 ```sh
