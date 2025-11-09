@@ -1,13 +1,13 @@
 use clap::{Parser, ValueEnum};
 use std::fs;
 
+mod format;
 mod parser;
 
 #[derive(Debug, Clone, ValueEnum)]
 enum Format {
     Summary,
     Json,
-    Csv,
 }
 
 #[derive(Parser, Debug)]
@@ -18,6 +18,9 @@ struct Args {
 
     #[arg(long, default_value = "summary")]
     format: Format,
+
+    #[arg(long)]
+    outfile: Option<String>,
 }
 
 fn main() {
@@ -27,5 +30,8 @@ fn main() {
     let contents = fs::read_to_string(expanded_path.as_ref()).expect("Failed to read clippings");
     let parsed = parser::parse(&contents);
 
-    println!("read {} highlights", parsed.len());
+    match args.format {
+        Format::Summary => format::summary(&parsed),
+        Format::Json => format::json(&parsed, args.outfile.as_deref()),
+    }
 }
