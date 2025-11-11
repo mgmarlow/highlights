@@ -1,15 +1,15 @@
 # highlights
 
-Convert Kindle "My Clippings.txt" files into structured JSON.
+Convert Kindle "My Clippings.txt" files into structured data.
 
-Highlights for ebooks manually uploaded to a Kindle device are
-stored in the on-device "My Clippings.txt" rather than the usual
-highlight notebook. This CLI reads this text file and converts
-it to JSON so you can easily import it into other formats.
+Highlights for ebooks manually uploaded to a Kindle device are stored
+in the on-device "My Clippings.txt" rather than the usual highlight
+notebook. This CLI converts "My Clippings.txt" into JSON so you can
+easily import it into other formats. Or, create a SQLite database that
+you can query directly.
 
-Shoutout to [Standard Ebooks](https://standardebooks.org/) for
-being the reason I have so many highlights stored as Kindle
-clippings.
+Shoutout to [Standard Ebooks](https://standardebooks.org/) for being the
+reason I have so many highlights stored as Kindle clippings.
 
 ## Usage
 
@@ -20,12 +20,12 @@ cargo run -- --filename ~/Documents/My\ Clippings.txt --format json
 ### Options
 
 - `--filename`: Path to Kindle clippings file (required)
-- `--format`: Output format - `json`, `summary`, or `sqlite` (default: summary)
-- `--outfile`: Write to file instead of stdout (optional, defaults to `highlights.db` for sqlite format)
+- `--format`: Output format - `json`, `summary`, or `sqlite` (default:
+  summary)
+- `--outfile`: Write to file instead of stdout (optional, defaults to
+  `highlights.db` for sqlite format)
 
-## Output
-
-Parses highlights, notes, and bookmarks into structured data.
+## Outputs
 
 ### JSON Format
 
@@ -47,17 +47,13 @@ Parses highlights, notes, and bookmarks into structured data.
 
 ### SQLite Format
 
-The `sqlite` format creates a SQLite3 db with two tables:
+The `sqlite` format creates a SQLite db with two tables:
 
 - **highlights**: Same as the JSON format, but only stores Highlights (no
   bookmarks or notes).
 - **notes** - Notes that point to a highlight_id reference.
 
-Example usage:
-
-```sh
-cargo run -- --filename ~/Documents/My\ Clippings.txt --format sqlite --outfile my_highlights.db
-```
+Example query:
 
 ```sql
 select notes.content, highlights.title
