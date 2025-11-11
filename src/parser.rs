@@ -12,6 +12,8 @@ pub struct Clipping {
     pub kind: Kind,
     pub page: Option<String>,
     pub location: String,
+    pub location_start: i64,
+    pub location_end: Option<i64>,
     pub date: String,
     pub content: String,
 }
@@ -70,6 +72,9 @@ fn parse_clipping(entry: &str) -> Option<Clipping> {
         "".to_string()
     };
 
+    // Parse location into start and end integers
+    let (location_start, location_end) = parse_location_range(&location)?;
+
     let date = if let Some(date_start) = metadata.find("Added on ") {
         metadata[date_start + 9..].to_string()
     } else {
@@ -89,9 +94,28 @@ fn parse_clipping(entry: &str) -> Option<Clipping> {
         kind,
         page,
         location,
+        location_start,
+        location_end,
         date,
         content,
     })
+}
+
+fn parse_location_range(location: &str) -> Option<(i64, Option<i64>)> {
+    if location.is_empty() {
+        return None;
+    }
+
+    if let Some(dash_pos) = location.find('-') {
+        // Range format: "2898-2899"
+        let start = location[..dash_pos].parse().ok()?;
+        let end = location[dash_pos + 1..].parse().ok()?;
+        Some((start, Some(end)))
+    } else {
+        // Single number: "2829"
+        let num = location.parse().ok()?;
+        Some((num, None))
+    }
 }
 
 fn parse_title_and_author(title_line: &str) -> (String, Option<String>) {
@@ -127,6 +151,8 @@ So the short explanation of why this 1950s language is not obsolete is that it w
         assert!(matches!(clipping.kind, Kind::Highlight));
         assert_eq!(clipping.page, Some("216".to_string()));
         assert_eq!(clipping.location, "2898-2899");
+        assert_eq!(clipping.location_start, 2898);
+        assert_eq!(clipping.location_end, Some(2899));
         assert_eq!(clipping.date, "Monday, March 4, 2024 5:17:31 PM");
         assert_eq!(
             clipping.content,
@@ -148,6 +174,8 @@ Well said";
         assert!(matches!(clipping.kind, Kind::Note));
         assert_eq!(clipping.page, Some("146".to_string()));
         assert_eq!(clipping.location, "2829");
+        assert_eq!(clipping.location_start, 2829);
+        assert_eq!(clipping.location_end, None);
         assert_eq!(clipping.content, "Well said");
     }
 
@@ -165,6 +193,8 @@ Well said";
         assert!(matches!(clipping.kind, Kind::Bookmark));
         assert_eq!(clipping.page, Some("160".to_string()));
         assert_eq!(clipping.location, "3085");
+        assert_eq!(clipping.location_start, 3085);
+        assert_eq!(clipping.location_end, None);
         assert_eq!(clipping.content, "");
     }
 

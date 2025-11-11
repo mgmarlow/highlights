@@ -4,6 +4,8 @@ CREATE TABLE IF NOT EXISTS highlights (
     author TEXT,
     page TEXT,
     location TEXT NOT NULL,
+    location_start INTEGER NOT NULL,
+    location_end INTEGER,
     date TEXT NOT NULL,
     content TEXT NOT NULL,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
@@ -19,4 +21,6 @@ CREATE TABLE IF NOT EXISTS notes (
 
 CREATE INDEX IF NOT EXISTS idx_title ON highlights(title);
 CREATE INDEX IF NOT EXISTS idx_date ON highlights(date);
+CREATE INDEX IF NOT EXISTS idx_location_start ON highlights(location_start);
+CREATE INDEX IF NOT EXISTS idx_location_end ON highlights(location_end);
 CREATE INDEX IF NOT EXISTS idx_notes_highlight_id ON notes(highlight_id);

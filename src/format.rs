@@ -70,12 +70,14 @@ fn create_database(db_path: &str, clippings: &[Clipping]) -> Result<(usize, usiz
     let mut highlights_count = 0;
     for highlight in highlights {
         conn.execute(
-            "INSERT INTO highlights (title, author, page, location, date, content) VALUES (?1, ?2, ?3, ?4, ?5, ?6)",
+            "INSERT INTO highlights (title, author, page, location, location_start, location_end, date, content) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8)",
             (
                 &highlight.title,
                 &highlight.author,
                 &highlight.page,
                 &highlight.location,
+                &highlight.location_start,
+                &highlight.location_end,
                 &highlight.date,
                 &highlight.content,
             ),
@@ -83,13 +85,20 @@ fn create_database(db_path: &str, clippings: &[Clipping]) -> Result<(usize, usiz
         highlights_count += 1;
     }
 
-    // Insert all notes, linking to the most recent highlight from the same book
+    // Insert all notes, linking to highlights by location
     let mut notes_count = 0;
     for note in notes {
-        // Find the most recent highlight from the same book
-        let mut stmt =
-            conn.prepare("SELECT id FROM highlights WHERE title = ?1 ORDER BY id DESC LIMIT 1")?;
-        let mut rows = stmt.query([&note.title])?;
+        // Find a highlight from the same book where note location falls within highlight range
+        // If location_end is NULL, check if note location equals location_start
+        // If location_end is NOT NULL, check if note location falls within the range
+        let mut stmt = conn.prepare(
+            "SELECT id FROM highlights
+             WHERE title = ?1
+               AND location_start <= ?2
+               AND (location_end IS NULL AND location_start = ?2 OR location_end >= ?2)
+             LIMIT 1",
+        )?;
+        let mut rows = stmt.query((&note.title, note.location_start))?;
 
         if let Some(row) = rows.next()? {
             let highlight_id: i64 = row.get(0)?;
@@ -100,8 +109,8 @@ fn create_database(db_path: &str, clippings: &[Clipping]) -> Result<(usize, usiz
             notes_count += 1;
         } else {
             eprintln!(
-                "Warning: Could not find matching highlight for note in '{}'",
-                note.title
+                "Warning: Could not find matching highlight for note at location {} in '{}'",
+                note.location, note.title
             );
         }
     }
