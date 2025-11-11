@@ -8,6 +8,7 @@ pub enum Kind {
 #[derive(Debug, Clone, serde::Serialize)]
 pub struct Clipping {
     pub title: String,
+    pub author: Option<String>,
     pub kind: Kind,
     pub page: Option<String>,
     pub location: String,
@@ -33,7 +34,8 @@ fn parse_clipping(entry: &str) -> Option<Clipping> {
         return None;
     }
 
-    let title = lines[0].trim().to_string();
+    let title_line = lines[0].trim();
+    let (title, author) = parse_title_and_author(title_line);
     let metadata = lines[1].trim();
 
     // Parse metadata line
@@ -83,12 +85,28 @@ fn parse_clipping(entry: &str) -> Option<Clipping> {
 
     Some(Clipping {
         title,
+        author,
         kind,
         page,
         location,
         date,
         content,
     })
+}
+
+fn parse_title_and_author(title_line: &str) -> (String, Option<String>) {
+    // Check if title contains author in parentheses at the end
+    // Format: "Book Title (Author Name)"
+    if let Some(open_paren) = title_line.rfind('(') {
+        if title_line.ends_with(')') {
+            let title = title_line[..open_paren].trim().to_string();
+            let author = title_line[open_paren + 1..title_line.len() - 1]
+                .trim()
+                .to_string();
+            return (title, Some(author));
+        }
+    }
+    (title_line.to_string(), None)
 }
 
 #[cfg(test)]
@@ -105,6 +123,7 @@ So the short explanation of why this 1950s language is not obsolete is that it w
         let clipping = parse_clipping(input).unwrap();
 
         assert_eq!(clipping.title, "Hackers & Painters");
+        assert_eq!(clipping.author, None);
         assert!(matches!(clipping.kind, Kind::Highlight));
         assert_eq!(clipping.page, Some("216".to_string()));
         assert_eq!(clipping.location, "2898-2899");
@@ -124,7 +143,8 @@ Well said";
 
         let clipping = parse_clipping(input).unwrap();
 
-        assert_eq!(clipping.title, "Coders at Work (Seibel, Peter)");
+        assert_eq!(clipping.title, "Coders at Work");
+        assert_eq!(clipping.author, Some("Seibel, Peter".to_string()));
         assert!(matches!(clipping.kind, Kind::Note));
         assert_eq!(clipping.page, Some("146".to_string()));
         assert_eq!(clipping.location, "2829");
@@ -140,7 +160,8 @@ Well said";
 
         let clipping = parse_clipping(input).unwrap();
 
-        assert_eq!(clipping.title, "Coders at Work (Seibel, Peter)");
+        assert_eq!(clipping.title, "Coders at Work");
+        assert_eq!(clipping.author, Some("Seibel, Peter".to_string()));
         assert!(matches!(clipping.kind, Kind::Bookmark));
         assert_eq!(clipping.page, Some("160".to_string()));
         assert_eq!(clipping.location, "3085");
@@ -179,8 +200,10 @@ Note content
 
         assert_eq!(clippings.len(), 2);
         assert_eq!(clippings[0].title, "Hackers & Painters");
+        assert_eq!(clippings[0].author, None);
         assert!(matches!(clippings[0].kind, Kind::Highlight));
-        assert_eq!(clippings[1].title, "Coders at Work (Seibel, Peter)");
+        assert_eq!(clippings[1].title, "Coders at Work");
+        assert_eq!(clippings[1].author, Some("Seibel, Peter".to_string()));
         assert!(matches!(clippings[1].kind, Kind::Note));
     }
 

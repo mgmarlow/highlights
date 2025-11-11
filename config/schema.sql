@@ -1,6 +1,7 @@
 CREATE TABLE IF NOT EXISTS highlights (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     title TEXT NOT NULL,
+    author TEXT,
     page TEXT,
     location TEXT NOT NULL,
     date TEXT NOT NULL,

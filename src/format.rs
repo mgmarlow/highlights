@@ -70,9 +70,10 @@ fn create_database(db_path: &str, clippings: &[Clipping]) -> Result<(usize, usiz
     let mut highlights_count = 0;
     for highlight in highlights {
         conn.execute(
-            "INSERT INTO highlights (title, page, location, date, content) VALUES (?1, ?2, ?3, ?4, ?5)",
+            "INSERT INTO highlights (title, author, page, location, date, content) VALUES (?1, ?2, ?3, ?4, ?5, ?6)",
             (
                 &highlight.title,
+                &highlight.author,
                 &highlight.page,
                 &highlight.location,
                 &highlight.date,
