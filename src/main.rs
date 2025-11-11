@@ -8,6 +8,7 @@ mod parser;
 enum Format {
     Summary,
     Json,
+    Sqlite,
 }
 
 #[derive(Parser, Debug)]
@@ -33,5 +34,6 @@ fn main() {
     match args.format {
         Format::Summary => format::summary(&parsed),
         Format::Json => format::json(&parsed, args.outfile.as_deref()),
+        Format::Sqlite => format::sqlite(&parsed, args.outfile.as_deref()),
     }
 }
